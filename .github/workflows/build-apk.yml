@@ -24,8 +24,25 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Enforce AndroidX
+      - name: Auto-Prepare Resources
         run: |
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/assets
+
+          cat << 'EOF' > app/src/main/res/values/strings.xml
+          <resources>
+              <string name="app_name">MICR</string>
+          </resources>
+          EOF
+
+          cat << 'EOF' > app/src/main/res/values/colors.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="bg_dark">#070D18</color>
+              <color name="accent_green">#00D59B</color>
+          </resources>
+          EOF
+
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
 
