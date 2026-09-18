@@ -25,11 +25,13 @@ jobs:
           gradle-version: '8.5'
           cache-read-only: false
 
-      - name: Auto-Clean Old Web Assets & Enforce AndroidX
+      - name: Clean Conflicting Legacy Files
         run: |
           rm -rf index.html assets app/src/main/assets package.json capacitor.config.json
+          rm -rf app/src/main/java/com/ansh/mishare
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
+          echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
 
       - name: Build Debug APK
         run: gradle :app:assembleDebug --no-daemon --stacktrace
