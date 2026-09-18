@@ -9,7 +9,6 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.*
 import java.net.ServerSocket
-import java.net.Socket
 
 class TransferService : Service() {
 
@@ -34,17 +33,17 @@ class TransferService : Service() {
 
         startForeground(101, notification)
 
-        // Run background socket thread
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (!isSender) {
                     val server = ServerSocket(8888)
                     server.receiveBufferSize = 262144
                     val client = server.accept()
-                    // Kept alive
+                    client.close()
+                    server.close()
                 }
             } catch (e: Exception) {
-                // Handled
+                e.printStackTrace()
             }
         }
 
@@ -59,7 +58,7 @@ class TransferService : Service() {
                 NotificationManager.IMPORTANCE_LOW
             )
             val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+            manager?.createNotificationChannel(channel)
         }
     }
 }
