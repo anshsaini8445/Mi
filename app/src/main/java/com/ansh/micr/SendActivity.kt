@@ -124,20 +124,20 @@ class SendActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val it = items[position]
-            holder.tvName.text = it.name
-            holder.tvSize.text = it.size
-            if (it.icon != null) {
-                holder.ivIcon.setImageDrawable(it.icon)
+            val currentItem = items[position]
+            holder.tvName.text = currentItem.name
+            holder.tvSize.text = currentItem.size
+            if (currentItem.icon != null) {
+                holder.ivIcon.setImageDrawable(currentItem.icon)
             } else {
                 holder.ivIcon.setImageResource(android.R.drawable.sym_def_app_icon)
             }
-            holder.cbSelect.isChecked = it.isSelected
+            holder.cbSelect.isChecked = currentItem.isSelected
 
             holder.itemView.setOnClickListener {
-                it.isSelected = !it.isSelected
-                holder.cbSelect.isChecked = it.isSelected
-                onSelect(it)
+                currentItem.isSelected = !currentItem.isSelected
+                holder.cbSelect.isChecked = currentItem.isSelected
+                onSelect(currentItem)
             }
         }
 
