@@ -24,33 +24,8 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Inject Colors & Theme Resources
+      - name: Enforce AndroidX
         run: |
-          mkdir -p app/src/main/res/values
-
-          cat << 'EOF' > app/src/main/res/values/colors.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <color name="bg_dark">#070D18</color>
-              <color name="card_dark">#0E1726</color>
-              <color name="card_border">#1A273E</color>
-              <color name="accent_green">#00D59B</color>
-              <color name="accent_blue">#0084FF</color>
-              <color name="text_white">#F8FAFC</color>
-              <color name="text_muted">#8B9BB4</color>
-          </resources>
-          EOF
-
-          cat << 'EOF' > app/src/main/res/values/themes.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <style name="Theme.MICR" parent="Theme.Material3.DayNight.NoActionBar">
-                  <item name="android:windowBackground">@color/bg_dark</item>
-                  <item name="android:statusBarColor">@color/bg_dark</item>
-              </style>
-          </resources>
-          EOF
-
           echo "android.useAndroidX=true" >> gradle.properties
           echo "android.nonTransitiveRClass=true" >> gradle.properties
 
