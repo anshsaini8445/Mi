@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<CardView>(R.id.cardHistory).setOnClickListener {
-            Toast.makeText(this, "Transfer History Vault: 0 records", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Transfer History: 0 records", Toast.LENGTH_SHORT).show()
         }
 
         findViewById<TextView>(R.id.btnMenu).setOnClickListener {
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             val device = Build.DEVICE ?: "SM_M135FU"
             AlertDialog.Builder(this)
                 .setTitle("$device ($model)")
-                .setMessage("• Storage: 18.44 / 50.82 GB\n• Mode: 5GHz (100 MB/s Turbo)\n• Background Transfer: Enabled\n• Ad-Free Engine: Active")
+                .setMessage("Storage: 18.44 / 50.82 GB\nMode: 5GHz (100 MB/s Turbo)\nBackground Engine: Active\nStatus: Ready")
                 .setPositiveButton("OK", null)
                 .show()
         }
