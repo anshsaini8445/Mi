@@ -16,7 +16,13 @@ import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.coroutines.*
 import java.io.File
 
-data class ShareItem(val name: String, val size: String, val icon: Drawable?, val path: String, var isSelected: Boolean = false)
+data class ShareItem(
+    val name: String,
+    val size: String,
+    val icon: Drawable?,
+    val path: String,
+    var isSelected: Boolean = false
+)
 
 class SendActivity : AppCompatActivity() {
 
@@ -32,25 +38,28 @@ class SendActivity : AppCompatActivity() {
         tvSelectedCount = findViewById(R.id.tvSelectedCount)
         val rvItems = findViewById<RecyclerView>(R.id.rvItems)
         rvItems.layoutManager = GridLayoutManager(this, 4)
+
         adapter = ShareItemAdapter(allItems) { item ->
-            if (item.isSelected) selectedItems.add(item) else selectedItems.remove(item)
+            if (item.isSelected) {
+                selectedItems.add(item)
+            } else {
+                selectedItems.remove(item)
+            }
             tvSelectedCount.text = "${selectedItems.size} SELECTED"
         }
         rvItems.adapter = adapter
 
         findViewById<TextView>(R.id.btnBack).setOnClickListener { finish() }
 
-        // Start Auto-Scanning installed apps like InShare
         loadInstalledApps()
 
-        // Start Camera Scan on NEXT button
         findViewById<Button>(R.id.btnNext).setOnClickListener {
             if (selectedItems.isEmpty()) {
-                Toast.makeText(this, "कृपया कोई फ़ाइल चुनें", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please select at least one file", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val integrator = IntentIntegrator(this)
-            integrator.setPrompt("रिसीवर का QR कोड स्कैन करें")
+            integrator.setPrompt("Scan Receiver QR Code")
             integrator.setBeepEnabled(true)
             integrator.setOrientationLocked(true)
             integrator.initiateScan()
@@ -84,8 +93,7 @@ class SendActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null && result.contents != null) {
-            val qr = result.contents
-            Toast.makeText(this, "QR कनेक्टेड: ट्रांसफ़र शुरू!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "QR Connected: Starting Transfer...", Toast.LENGTH_LONG).show()
 
             val serviceIntent = Intent(this, TransferService::class.java).apply {
                 putExtra("IS_SENDER", true)
@@ -98,8 +106,10 @@ class SendActivity : AppCompatActivity() {
         }
     }
 
-    class ShareItemAdapter(private val items: List<ShareItem>, private val onSelect: (ShareItem) -> Unit) :
-        RecyclerView.Adapter<ShareItemAdapter.ViewHolder>() {
+    class ShareItemAdapter(
+        private val items: List<ShareItem>,
+        private val onSelect: (ShareItem) -> Unit
+    ) : RecyclerView.Adapter<ShareItemAdapter.ViewHolder>() {
 
         class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val ivIcon: ImageView = v.findViewById(R.id.ivIcon)
@@ -117,7 +127,11 @@ class SendActivity : AppCompatActivity() {
             val it = items[position]
             holder.tvName.text = it.name
             holder.tvSize.text = it.size
-            holder.ivIcon.setImageDrawable(it.icon)
+            if (it.icon != null) {
+                holder.ivIcon.setImageDrawable(it.icon)
+            } else {
+                holder.ivIcon.setImageResource(android.R.drawable.sym_def_app_icon)
+            }
             holder.cbSelect.isChecked = it.isSelected
 
             holder.itemView.setOnClickListener {
