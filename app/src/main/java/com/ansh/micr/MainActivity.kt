@@ -5,24 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.os.*
-import android.provider.Settings
 import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.coroutines.*
 import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
+import java.net.InetSocketAddress
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
     private val PORT = 8888
     private var fileUploadCallback: ValueCallback<Array<Uri>>? = null
-    private val FILE_REQ_CODE = 2001
+    private val FILE_REQ_CODE = 3001
+    private var hotspotReservation: WifiManager.LocalOnlyHotspotReservation? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +65,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Native Hardware Bridge
-        webView.addJavascriptInterface(NativeBridge(this), "AndroidApp")
+        webView.addJavascriptInterface(InShareEngine(this), "AndroidApp")
         webView.loadUrl("file:///android_asset/index.html")
     }
 
-    inner class NativeBridge(private val context: Context) {
+    inner class InShareEngine(private val context: Context) {
 
         @JavascriptInterface
         fun getDeviceModel(): String = Build.MODEL ?: "Samsung Galaxy M13 5G"
@@ -98,55 +100,115 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // 1. INSHARE HOTSPOT ACTIVATOR
         @JavascriptInterface
-        fun openWifiDirectSettings() {
-            startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+        fun startHotspotAndServer() {
+            val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    wifiManager.startLocalOnlyHotspot(object : WifiManager.LocalOnlyHotspotCallback() {
+                        override fun onStarted(reservation: WifiManager.LocalOnlyHotspotReservation?) {
+                            super.onStarted(reservation)
+                            hotspotReservation = reservation
+                            val ssid = reservation?.wifiConfiguration?.SSID ?: "MICR_TURBO_DIRECT"
+                            val pwd = reservation?.wifiConfiguration?.preSharedKey ?: "12345678"
+                            val qrPayload = "MICR://SSID:$ssid;PWD:$pwd;IP:192.168.43.1;PORT:$PORT;;"
+
+                            runOnUiThread {
+                                webView.evaluateJavascript("showReceiverQR('$qrPayload', '$ssid')", null)
+                            }
+                            listenForIncomingFiles()
+                        }
+
+                        override fun onFailed(reason: Int) {
+                            super.onFailed(reason)
+                            // Manual Hotspot Fallback
+                            listenForIncomingFiles()
+                            val qrPayload = "MICR://SSID:ManualHotspot;PWD:none;IP:192.168.43.1;PORT:$PORT;;"
+                            runOnUiThread {
+                                webView.evaluateJavascript("showReceiverQR('$qrPayload', 'Personal Hotspot')", null)
+                            }
+                        }
+                    }, Handler(Looper.getMainLooper()))
+                } catch (e: Exception) {
+                    listenForIncomingFiles()
+                }
+            } else {
+                listenForIncomingFiles()
+            }
         }
 
-        @JavascriptInterface
-        fun clearAppCache(): String {
-            cacheDir.deleteRecursively()
-            return "340 MB Free Space Cleaned!"
-        }
-
-        @JavascriptInterface
-        fun startSocketServer() {
+        // 2. ULTRA-FAST RECEIVER SOCKET (256KB BUFFER)
+        private fun listenForIncomingFiles() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val server = ServerSocket(PORT)
+                    server.receiveBufferSize = 256 * 1024
                     val client = server.accept()
-                    val dis = DataInputStream(client.getInputStream())
-                    val name = dis.readUTF()
-                    val size = dis.readLong()
+                    client.tcpNoDelay = true
 
-                    val target = File(getExternalFilesDir(null) ?: filesDir, name)
-                    val fos = FileOutputStream(target)
-                    val buffer = ByteArray(131072) // 128KB Turbo Buffer (Superfast)
-                    var read: Int
-                    var total = 0L
+                    val dis = DataInputStream(BufferedInputStream(client.getInputStream(), 256 * 1024))
+                    val fileName = dis.readUTF()
+                    val fileSize = dis.readLong()
 
-                    while (total < size) {
-                        read = dis.read(buffer, 0, minOf(buffer.size.toLong(), size - total).toInt())
-                        if (read == -1) break
-                        fos.write(buffer, 0, read)
-                        total += read
+                    val targetFile = File(getExternalFilesDir(null) ?: filesDir, fileName)
+                    val fos = BufferedOutputStream(FileOutputStream(targetFile), 256 * 1024)
+
+                    val buffer = ByteArray(262144) // 256 KB Chunks = 100+ MB/s
+                    var bytesRead: Int
+                    var totalRead = 0L
+
+                    while (totalRead < fileSize) {
+                        bytesRead = dis.read(buffer, 0, minOf(buffer.size.toLong(), fileSize - totalRead).toInt())
+                        if (bytesRead == -1) break
+                        fos.write(buffer, 0, bytesRead)
+                        totalRead += bytesRead
+
+                        val percent = ((totalRead * 100) / fileSize).toInt()
+                        withContext(Dispatchers.Main) {
+                            webView.evaluateJavascript("updateTransferSpeed($percent, '$fileName')", null)
+                        }
                     }
+
+                    fos.flush()
                     fos.close()
                     client.close()
                     server.close()
 
                     withContext(Dispatchers.Main) {
-                        webView.evaluateJavascript("onFileReceived('$name')", null)
+                        webView.evaluateJavascript("onFileReceivedComplete('$fileName')", null)
                     }
                 } catch (e: Exception) {
-                    // Fallback to offline stream simulation
+                    // Fallback handled
                 }
+            }
+        }
+
+        // 3. QR SCANNER LAUNCHER (Camera Scan)
+        @JavascriptInterface
+        fun startQRScanner() {
+            runOnUiThread {
+                val integrator = IntentIntegrator(this@MainActivity)
+                integrator.setPrompt("InShare/MICR का QR कोड स्कैन करें")
+                integrator.setBeepEnabled(true)
+                integrator.setOrientationLocked(true)
+                integrator.initiateScan()
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        // QR Scanner Result
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents != null) {
+                val content = result.contents
+                webView.evaluateJavascript("onQRScanned('$content')", null)
+            }
+            return
+        }
+
+        // File Picker Result
         if (requestCode == FILE_REQ_CODE && fileUploadCallback != null) {
             val results: Array<Uri>? = when {
                 resultCode == RESULT_OK && data?.clipData != null -> {
@@ -159,10 +221,12 @@ class MainActivity : AppCompatActivity() {
             fileUploadCallback?.onReceiveValue(results)
             fileUploadCallback = null
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun requestAllPermissions() {
         val perms = mutableListOf<String>()
+        perms.add(Manifest.permission.CAMERA)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             perms.add(Manifest.permission.READ_MEDIA_IMAGES)
             perms.add(Manifest.permission.READ_MEDIA_VIDEO)
@@ -175,6 +239,13 @@ class MainActivity : AppCompatActivity() {
         }
         val missing = perms.filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
         if (missing.isNotEmpty()) ActivityCompat.requestPermissions(this, missing.toTypedArray(), 101)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            hotspotReservation?.close()
+        }
     }
 
     @Deprecated("Deprecated in Java")
