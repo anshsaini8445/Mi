@@ -26,7 +26,7 @@ class WebShareActivity : AppCompatActivity() {
     private fun showWebAddressDialog(title: String, ip: String) {
         AlertDialog.Builder(this)
             .setTitle(title)
-            .setMessage("अपने PC या iPhone ब्राउज़र में खोलें:\n👉 http://$ip:8888")
+            .setMessage("Open this address in your PC or iOS browser:\nhttp://$ip:8888")
             .setPositiveButton("OK", null)
             .show()
     }
