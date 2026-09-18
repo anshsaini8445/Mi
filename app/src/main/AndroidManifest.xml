@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -29,7 +30,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/ic_micr_logo"
+        android:roundIcon="@drawable/ic_micr_logo"
         android:label="MICR"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
