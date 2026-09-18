@@ -22,16 +22,17 @@ class ReceiveActivity : AppCompatActivity() {
         val dev = Build.DEVICE ?: "SM_M135FU"
         findViewById<TextView>(R.id.tvDeviceHeader).text = dev
 
-        // Generate Receiver QR Code
         val qrContent = "MICR://SSID:DIRECT-50-MICR;IP:192.168.43.1;PORT:8888;;"
         findViewById<ImageView>(R.id.ivQRCode).setImageBitmap(generateQRCodeBitmap(qrContent))
 
-        // Wi-Fi Direct vs Hotspot Modal (Screenshot 14 Match)
         findViewById<Button>(R.id.btnWifiDirectSwitch).setOnClickListener {
             showTransferModeDialog()
         }
 
-        // Background Receiver Service Start
+        findViewById<Button>(R.id.btnReceiveFromPC).setOnClickListener {
+            startActivity(Intent(this, WebShareActivity::class.java))
+        }
+
         val serviceIntent = Intent(this, TransferService::class.java).apply {
             putExtra("IS_SENDER", false)
         }
