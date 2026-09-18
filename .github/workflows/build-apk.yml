@@ -24,11 +24,10 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Auto-Inject All Missing Colors and Resources
+      - name: Inject Colors & Theme Resources
         run: |
           mkdir -p app/src/main/res/values
 
-          # सारे मिसिंग कलर्स एक साथ इंजेक्ट करें
           cat << 'EOF' > app/src/main/res/values/colors.xml
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
@@ -42,7 +41,6 @@ jobs:
           </resources>
           EOF
 
-          # सही थीम्स सुनिश्चित करें
           cat << 'EOF' > app/src/main/res/values/themes.xml
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
