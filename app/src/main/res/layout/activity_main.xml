@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Top Bar -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
                 android:id="@+id/btnMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="10dp"
+                android:padding="6dp"
                 android:text="☰"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
@@ -31,6 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:background="#0084FF"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
@@ -63,28 +64,13 @@
                 android:textColor="#00D59B"
                 android:textSize="11sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/btnInvite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:background="#00D59B"
-                android:paddingStart="10dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="4dp"
-                android:text="+ Invite"
-                android:textColor="#070D18"
-                android:textSize="11sp"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Ultra-Fast Engine Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
             app:cardBackgroundColor="#0E1726"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp">
@@ -92,9 +78,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="44dp"
@@ -144,14 +130,13 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Giant Send & Receive Action Row -->
+        <!-- Send & Receive Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="22dp"
             android:orientation="horizontal">
 
-            <!-- Send Button -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardSend"
                 android:layout_width="0dp"
@@ -195,7 +180,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Receive Button -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardReceive"
                 android:layout_width="0dp"
@@ -240,7 +224,7 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Utility Row: History & Connect to PC -->
+        <!-- PC Connect & History -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -281,7 +265,6 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvHistoryRecords"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 records"
@@ -292,7 +275,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardPC"
+                android:id="@+id/cardWebShare"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -334,114 +317,5 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
-
-        <!-- Categories Bar -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="#0E1726"
-            app:cardCornerRadius="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:weightSum="6">
-
-                <TextView
-                    android:id="@+id/catApps"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="📦\nApps"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/catFiles"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="📄\nFiles"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/catVideos"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="🎬\nVideos"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/catPhotos"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="🖼\nPhotos"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/catSongs"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="🎵\nSongs"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/catContacts"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="👤\nContacts"
-                    android:textColor="#8B9BB4"
-                    android:textSize="11sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Status & Real-Time Progress -->
-        <TextView
-            android:id="@+id/tvTransferStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="Idle: Ready for InShare Direct P2P Transfer"
-            android:textColor="#00D59B"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_marginTop="10dp"
-            android:visibility="gone" />
-
-        <!-- Native QR Code Display -->
-        <ImageView
-            android:id="@+id/imgQrCode"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFF"
-            android:padding="8dp"
-            android:visibility="gone" />
-
     </LinearLayout>
 </ScrollView>
