@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="#070D18"
     android:fillViewport="true">
 
     <LinearLayout
@@ -20,16 +20,25 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/btnMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#005EC4"
+                android:paddingEnd="10dp"
+                android:text="☰"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#0084FF"
                 android:paddingStart="8dp"
-                android:paddingTop="4dp"
+                android:paddingTop="3dp"
                 android:paddingEnd="8dp"
-                android:paddingBottom="4dp"
+                android:paddingBottom="3dp"
                 android:text="MI"
                 android:textColor="#FFFFFF"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,76 +46,123 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="MICR Share"
-                android:textColor="@color/accent_green"
-                android:textSize="20sp"
+                android:text="MI Share"
+                android:textColor="#00D59B"
+                android:textSize="19sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/card_dark"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
+                android:background="#0E1726"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
                 android:text="5GHZ TURBO"
-                android:textColor="@color/accent_green"
+                android:textColor="#00D59B"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnInvite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="#00D59B"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
+                android:text="+ Invite"
+                android:textColor="#070D18"
                 android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Speed Engine Banner -->
+        <!-- Ultra-Fast Engine Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/card_dark"
+            android:layout_marginTop="18dp"
+            app:cardBackgroundColor="#0E1726"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="#16253C"
+                    android:gravity="center"
+                    android:text="⚡"
+                    android:textColor="#00D59B"
+                    android:textSize="22sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ultra-Fast 100 MB/s Engine"
+                        android:textColor="#F8FAFC"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Direct Wi-Fi Socket Engine • Zero Data"
+                        android:textColor="#8B9BB4"
+                        android:textSize="11sp" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⚡ Ultra-Fast 100 MB/s Engine"
-                    android:textColor="@color/text_white"
-                    android:textSize="15sp"
+                    android:background="#16253C"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="5GHz"
+                    android:textColor="#00D59B"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Direct Wi-Fi Socket Engine • Zero Data Usage"
-                    android:textColor="@color/text_muted"
-                    android:textSize="12sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Big Send & Receive Buttons -->
+        <!-- Giant Send & Receive Action Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <!-- Send Button -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardSend"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="135dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="#00B87A"
-                app:cardCornerRadius="24dp">
+                app:cardBackgroundColor="#00996F"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,13 +199,14 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardReceive"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="135dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="#0077E6"
-                app:cardCornerRadius="24dp">
+                app:cardBackgroundColor="#005EC4"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,7 +217,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="↙"
+                        android:text="⤓"
                         android:textColor="#FFFFFF"
                         android:textSize="32sp"
                         android:textStyle="bold" />
@@ -176,14 +233,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hotspot &amp; Wi-Fi"
+                        android:text="Scan QR or Hotspot"
                         android:textColor="#E0FFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Secondary Utilities -->
+        <!-- Utility Row: History & Connect to PC -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark"
+                app:cardBackgroundColor="#0E1726"
                 app:cardCornerRadius="16dp">
 
                 <LinearLayout
@@ -208,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🕒 "
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -219,15 +276,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="History"
-                            android:textColor="@color/text_white"
+                            android:textColor="#F8FAFC"
                             android:textSize="13sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvHistoryRecords"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 records"
-                            android:textColor="@color/text_muted"
+                            android:textColor="#8B9BB4"
                             android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -239,7 +297,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="@color/card_dark"
+                app:cardBackgroundColor="#0E1726"
                 app:cardCornerRadius="16dp">
 
                 <LinearLayout
@@ -251,7 +309,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="💻 "
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -262,30 +320,107 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Connect to PC"
-                            android:textColor="@color/text_white"
+                            android:textColor="#F8FAFC"
                             android:textSize="13sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Web Share"
-                            android:textColor="@color/text_muted"
+                            android:text="Web Browser Share"
+                            android:textColor="#8B9BB4"
                             android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Transfer Status Text -->
-        <TextView
-            android:id="@+id/tvStatus"
+        <!-- Categories Bar -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#0E1726"
+            app:cardCornerRadius="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:weightSum="6">
+
+                <TextView
+                    android:id="@+id/catApps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="📦\nApps"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/catFiles"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="📄\nFiles"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/catVideos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="🎬\nVideos"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/catPhotos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="🖼\nPhotos"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/catSongs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="🎵\nSongs"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/catContacts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="👤\nContacts"
+                    android:textColor="#8B9BB4"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Status & Real-Time Progress -->
+        <TextView
+            android:id="@+id/tvTransferStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="Ready for Real-Time Offline Transfer"
-            android:textColor="@color/accent_green"
+            android:text="Idle: Ready for InShare Direct P2P Transfer"
+            android:textColor="#00D59B"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -293,8 +428,19 @@
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
+
+        <!-- Native QR Code Display -->
+        <ImageView
+            android:id="@+id/imgQrCode"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:padding="8dp"
             android:visibility="gone" />
 
     </LinearLayout>
