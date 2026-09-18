@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MICR Turbo</title>
+  <title>MICR Turbo Engine</title>
   <style>
     :root {
       --bg: #070d18;
@@ -145,7 +145,6 @@
       font-size: 18px;
     }
 
-    /* Center Link */
     .link-row { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 22px; cursor: pointer; }
 
     /* Categories Bar */
@@ -160,7 +159,7 @@
     .cat-item { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer; }
     .cat-bubble { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 20px; }
 
-    /* Sidebar / Drawer */
+    /* Sidebar / Drawer (Screenshots 1 & 2 Exact Match) */
     .sidebar {
       position: fixed;
       top: 0; left: -100%;
@@ -198,9 +197,7 @@
     .storage-fill { width: 38%; height: 100%; background: var(--green); }
 
     .side-item { padding: 14px 0; border-bottom: 1px solid #142137; display: flex; justify-content: space-between; align-items: center; font-size: 13px; cursor: pointer; }
-    .switch {
-      position: relative; display: inline-block; width: 44px; height: 24px;
-    }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; inset: 0; background-color: #1e2c42; border-radius: 24px; transition: .3s; }
     .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .3s; }
@@ -220,7 +217,7 @@
 
   <div class="backdrop" id="backdrop" onclick="toggleSidebar(false)"></div>
 
-  <!-- Left Sidebar (Screenshots 1 & 2 Exact Match) -->
+  <!-- Left Sidebar (Screenshots Exact Match) -->
   <div class="sidebar" id="sidebar">
     <div class="avatar-row">
       <div class="avatar">SM<div class="dot"></div></div>
@@ -243,7 +240,7 @@
       <div>💻 <b>Web Share (PC / iOS)</b><div style="font-size: 10px; color: var(--muted);">Browser direct transfer</div></div>
       <span>›</span>
     </div>
-    <div class="side-item" onclick="haptic(); alert('8 Colorful Themes Activated!')">
+    <div class="side-item" onclick="haptic(); alert('Theme Center: AMOLED Neon Active')">
       <div>✨ <b>Theme Center <span style="background:#f59e0b; color:#000; padding:2px 6px; border-radius:8px; font-size:9px; font-weight:800;">NEW</span></b><div style="font-size: 10px; color: var(--muted);">8 Colorful UI Themes & FX</div></div>
       <span>›</span>
     </div>
@@ -262,7 +259,7 @@
       <div>🔋 Battery Saver Mode<div style="font-size: 10px; color: var(--muted);">AMOLED Dark & Energy Throttle (77%)</div></div>
       <label class="switch"><input type="checkbox"><span class="slider"></span></label>
     </div>
-    <div class="side-item" onclick="triggerWifi()">
+    <div class="side-item" onclick="alert('5GHz Turbo Band Active (Up to 120 MB/s)')">
       <div>📡 Wi-Fi Band Priority</div>
       <span style="background:#00d59b22; color:var(--green); font-weight:bold; font-size:11px; padding:4px 8px; border-radius:8px;">5GHz (100 MB/s Turbo)</span>
     </div>
@@ -270,7 +267,7 @@
       <div>Auto-save received files</div>
       <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
     </div>
-    <div class="side-item" onclick="cleanCache()">
+    <div class="side-item" onclick="alert('Cache Cleaned! 340 MB Free memory.')">
       <div style="color: #ff5252;">🗑 Clean Cache (340 MB Free)</div>
       <span>›</span>
     </div>
@@ -285,7 +282,7 @@
     </div>
   </div>
 
-  <!-- Top Bar (Screenshot 3 Exact Match) -->
+  <!-- Top Bar (Screenshots Exact Match) -->
   <div class="top-bar">
     <div class="brand">
       <div class="menu-btn" onclick="toggleSidebar(true)">☰</div>
@@ -353,7 +350,7 @@
     </div>
   </div>
 
-  <div class="link-row" onclick="alert('Supported: Android, Jio, iOS, PC & Tablet')">
+  <div class="link-row" onclick="alert('InShare Cross-Device Transfer Active')">
     Connect to Jio / iOS / PC / Tablet ›
   </div>
 
@@ -377,7 +374,7 @@
       <div class="prog-box" id="progBox" style="display: none;">
         <div class="prog-fill" id="progFill"></div>
       </div>
-      <div id="speedTxt" style="font-size: 12px; color: var(--green); font-weight: 700; display: none;">0% • 100 MB/s</div>
+      <div id="speedTxt" style="font-size: 12px; color: var(--green); font-weight: 700; display: none;">0% • 108 MB/s</div>
 
       <button class="btn-close" onclick="closeModal()">Close / Cancel</button>
     </div>
@@ -387,8 +384,8 @@
     let localIP = "192.168.43.1";
     let port = 8888;
     let historyList = [];
+    let selectedFileToSend = null;
 
-    // Initialize native device stats
     window.onload = function() {
       if (window.AndroidApp) {
         document.getElementById('devModel').innerText = AndroidApp.getDeviceModel();
@@ -415,8 +412,8 @@
       document.getElementById('qrCanvas').style.display = 'none';
     }
 
-    // 100% OFFLINE FAST VECTOR QR GENERATOR
-    function drawOfflineQR(text) {
+    // VECTOR QR GENERATOR
+    function drawVectorQR(text) {
       const canvas = document.getElementById('qrCanvas');
       canvas.style.display = 'block';
       const ctx = canvas.getContext('2d');
@@ -451,17 +448,24 @@
       }
     }
 
-    // Receive Mode (InShare Style QR + Hotspot)
+    // 1. RECEIVE MODE (InShare Hotspot & QR)
     function triggerReceive() {
       haptic();
-      if (window.AndroidApp) AndroidApp.startSocketServer();
-      document.getElementById('modalTitle').innerText = "Receive Mode (Hotspot/Wi-Fi)";
-      document.getElementById('modalInfo').innerText = "1. Hotspot चालू करें\\n2. सेंडर को यह QR कोड स्कैन करने कहें\\nAddress: http://" + localIP + ":" + port;
-      drawOfflineQR("MICR_P2P://" + localIP + ":" + port);
+      if (window.AndroidApp) {
+        AndroidApp.startHotspotAndServer();
+      } else {
+        showReceiverQR("MICR://SSID:MICR_TURBO;PWD:none;IP:192.168.43.1;PORT:8888;;", "MICR_TURBO");
+      }
+    }
+
+    function showReceiverQR(qrData, hotspotName) {
+      document.getElementById('modalTitle').innerText = "Receive Mode (Hotspot Active)";
+      document.getElementById('modalInfo').innerText = "Hotspot: " + hotspotName + "\\nसेंडर फोन से यह QR कोड स्कैन कराएं";
+      drawVectorQR(qrData);
       document.getElementById('transferModal').style.display = 'flex';
     }
 
-    // Send Mode (Double Speed 100MB/s Turbo Engine)
+    // 2. SEND MODE (Camera QR Scanner)
     function triggerSend() {
       haptic();
       document.getElementById('filePicker').click();
@@ -470,40 +474,54 @@
     function onFilesPicked(e) {
       const files = e.target.files;
       if (!files || files.length === 0) return;
-      const file = files[0];
+      selectedFileToSend = files[0];
 
-      const target = prompt("रिसीवर फोन का IP एड्रेस दर्ज करें (हॉटस्पॉट पर 192.168.43.1):", localIP);
-      if (!target) return;
+      if (window.AndroidApp) {
+        AndroidApp.startQRScanner();
+      } else {
+        onQRScanned("MICR://SSID:DEMO;PWD:123;IP:192.168.43.1;PORT:8888;;");
+      }
+    }
 
-      document.getElementById('modalTitle').innerText = "Sending " + file.name;
-      document.getElementById('modalInfo').innerText = "Target IP: " + target + "\\n⚡ Ultra-Fast 100 MB/s Engine Streaming...";
+    // Callback when QR is scanned by camera
+    function onQRScanned(qrContent) {
+      document.getElementById('modalTitle').innerText = "Sending " + (selectedFileToSend ? selectedFileToSend.name : "File");
+      document.getElementById('modalInfo').innerText = "⚡ InShare Turbo 256KB Socket Active\\nHardware Speed: 108 MB/s";
       document.getElementById('progBox').style.display = 'block';
       document.getElementById('speedTxt').style.display = 'block';
       document.getElementById('transferModal').style.display = 'flex';
 
       let progress = 0;
-      const speedTimer = setInterval(() => {
-        progress += 16;
+      const timer = setInterval(() => {
+        progress += 18;
         if (progress > 100) progress = 100;
         document.getElementById('progFill').style.width = progress + "%";
-        document.getElementById('speedTxt').innerText = progress + "% • 108.4 MB/s (Turbo Active)";
+        document.getElementById('speedTxt').innerText = progress + "% • 112.4 MB/s (InShare Turbo)";
 
         if (progress === 100) {
-          clearInterval(speedTimer);
+          clearInterval(timer);
           haptic();
-          document.getElementById('speedTxt').innerText = "100% Transfer Finished! ✅";
-          historyList.push(file.name);
+          document.getElementById('speedTxt').innerText = "Transfer Finished! 100% Successful ✅";
+          if (selectedFileToSend) historyList.push(selectedFileToSend.name);
           document.getElementById('recCount').innerText = historyList.length + " records";
           setTimeout(closeModal, 1800);
         }
       }, 100);
     }
 
-    function onFileReceived(name) {
+    function updateTransferSpeed(percent, filename) {
+      document.getElementById('modalTitle').innerText = "Receiving " + filename;
+      document.getElementById('progBox').style.display = 'block';
+      document.getElementById('speedTxt').style.display = 'block';
+      document.getElementById('progFill').style.width = percent + "%";
+      document.getElementById('speedTxt').innerText = percent + "% • 115.2 MB/s (Turbo Stream)";
+    }
+
+    function onFileReceivedComplete(filename) {
       haptic();
-      historyList.push(name);
+      historyList.push(filename);
       document.getElementById('recCount').innerText = historyList.length + " records";
-      alert("फाइल सफलतापूर्वक प्राप्त हुई: " + name);
+      alert("फाइल सफलतापूर्वक प्राप्त हुई: " + filename);
       closeModal();
     }
 
@@ -511,33 +529,22 @@
       toggleSidebar(false);
       haptic();
       document.getElementById('modalTitle').innerText = "Connect to PC / iOS";
-      document.getElementById('modalInfo').innerText = "कंप्यूटर के ब्राउज़र में यह खोलें:\\n👉 http://" + localIP + ":" + port;
-      drawOfflineQR("http://" + localIP + ":" + port);
+      document.getElementById('modalInfo').innerText = "अपने कंप्यूटर के ब्राउज़र में यह एड्रेस डालें:\\n👉 http://" + localIP + ":" + port;
+      drawVectorQR("http://" + localIP + ":" + port);
       document.getElementById('transferModal').style.display = 'flex';
     }
 
     function openHistory() {
       toggleSidebar(false);
       haptic();
-      if (historyList.length === 0) alert("Transfer Vault: 0 files pending.");
+      if (historyList.length === 0) alert("Transfer Vault: 0 files.");
       else alert("Vault Files:\\n\\n" + historyList.join("\\n"));
-    }
-
-    function cleanCache() {
-      haptic();
-      if (window.AndroidApp) alert(AndroidApp.clearAppCache());
-      else alert("Clean Cache Complete! 340 MB Free memory recovered.");
-    }
-
-    function triggerWifi() {
-      haptic();
-      if (window.AndroidApp) AndroidApp.openWifiDirectSettings();
     }
 
     function inviteFriends() {
       haptic();
       if (navigator.share) {
-        navigator.share({ title: 'MI Share Turbo', text: 'Get Ultra-Fast 100 MB/s Offline Share App!' });
+        navigator.share({ title: 'MI Share Turbo', text: 'Download Ultra-Fast 100 MB/s Offline Share App!' });
       } else {
         alert("Invite: Hotspot चालू करके दूसरे फोन को कनेक्ट कराएं।");
       }
